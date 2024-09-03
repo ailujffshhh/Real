@@ -1,8 +1,27 @@
-function openSpotifyLogin() {
-    const clientId = '2f4438a4873044d195f984a43319e804';
-    const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; 
-    const scopes = 'user-read-private user-read-email';
-    const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${encodeURIComponent(clientId)}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-    window.location.href = authUrl;
-}
 
+        const clientId = '2f4438a4873044d195f984a43319e804'; // Replace with your Spotify client ID
+        const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Must match the registered redirect URI
+        const scopes = 'user-read-private user-read-email';
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const state = generateRandomString(16);
+
+            const authUrl = new URL('https://accounts.spotify.com/authorize');
+            authUrl.searchParams.append('response_type', 'code');
+            authUrl.searchParams.append('client_id', clientId);
+            authUrl.searchParams.append('scope', scopes);
+            authUrl.searchParams.append('redirect_uri', redirectUri);
+            authUrl.searchParams.append('state', state);
+
+            window.location.href = authUrl.toString();
+        });
+
+        function generateRandomString(length) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return result;
+        }
+  
