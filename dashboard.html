@@ -61,6 +61,43 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
+const token = accessToken; // Replace with your actual token
+
+async function fetchWebApi(endpoint, method, body) {
+    const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        method,
+        body: body ? JSON.stringify(body) : undefined
+    });
+    return await res.json();
+}
+
+async function getTopTracks() {
+    // Endpoint reference: https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+    const response = await fetchWebApi(
+        'v1/me/top/tracks?time_range=long_term&limit=5', 'GET'
+    );
+    return response.items;
+}
+
+function displayTopTracks() {
+    getTopTracks().then(topTracks => {
+        const tracksList = document.getElementById('tracks-list');
+        topTracks.forEach(track => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${track.name} by ${track.artists.map(artist => artist.name).join(', ')}`;
+            tracksList.appendChild(listItem);
+        });
+    }).catch(error => {
+        console.error('Error fetching top tracks:', error);
+    });
+}
+
+// Call the function to display top tracks on page load
+displayTopTracks();
     </script>
 </body>
 </html>
