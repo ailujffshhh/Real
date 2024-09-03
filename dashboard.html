@@ -10,59 +10,53 @@
     <title>REAL</title>
 </head>
 <body>
-    <button id="login-btn">Login with Spotify</button>
-    <p id="status"></p>
+
     
+        <h1>REAL</h1>
+       
     <script>
-        const clientId = '2f4438a4873044d195f984a43319e804';
-        const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Ensure this matches your Spotify Developer Dashboard settings
-        const scopes = 'user-read-private user-read-email';
-        
-        // Initiate Authorization Request
-        document.getElementById('login-btn').addEventListener('click', () => {
-            const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${encodeURIComponent(clientId)}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-            window.location.href = authUrl;
-        });
+        const express = require('express');
+const querystring = require('querystring');
+const axios = require('axios'); // To make HTTP requests
+const app = express();
+const port = 8888;
 
-        // Handle Callback and Token Exchange (for educational purposes only)
-        const queryParams = new URLSearchParams(window.location.search);
-        const code = queryParams.get('code');
-        
-        if (code) {
-            document.getElementById('status').textContent = `Authorization Code: ${code}`;
-            exchangeCodeForToken(code);
-        }
+const clientId = '2f4438a4873044d195f984a43319e804'; // Replace with your Spotify client ID
+const clientSecret = '79b9df7213d343f4a06ef3d2800b12b2'; // Replace with your Spotify client secret
+const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard';
 
-        // Exchange Authorization Code for Access Token
-        function exchangeCodeForToken(code) {
-            // Replace with your client secret
-            const clientSecret = '79b9df7213d343f4a06ef3d2800b12b2'; // Never expose client_secret in production code
+app.get('/callback', async (req, res) => {
+    const code = req.query.code;
+    const state = req.query.state;
 
-            fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
+    if (code) {
+        try {
+            const tokenResponse = await axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: redirectUri
+            }), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(`${clientId}:${clientSecret}`)
-                },
-                body: new URLSearchParams({
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri: redirectUri
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.access_token) {
-                    document.getElementById('status').textContent = `Access Token: ${data.access_token}`;
-                } else {
-                    document.getElementById('status').textContent = 'Failed to retrieve access token.';
+                    'Authorization': 'Basic ' + Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
                 }
-            })
-            .catch(error => {
-                console.error('Error exchanging authorization code:', error);
-                document.getElementById('status').textContent = 'Error exchanging authorization code.';
             });
+
+            const accessToken = tokenResponse.data.access_token;
+            res.send(`Access Token: ${accessToken}`);
+        } catch (error) {
+            res.send('Error exchanging authorization code for access token.');
+            console.error('Error:', error);
         }
+    } else {
+        res.send('No authorization code found.');
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
     </script>
 </body>
 </html>
