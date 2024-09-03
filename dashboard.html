@@ -17,7 +17,8 @@
     <script>
 
 
-
+const authEndpoint = 'https://accounts.spotify.com/authorize';
+        const tokenEndpoint = 'https://accounts.spotify.com/api/token';
 function fetchAccessToken(code) {
             return fetch(tokenEndpoint, {
                 method: 'POST',
