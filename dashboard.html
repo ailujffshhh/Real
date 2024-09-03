@@ -3,25 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style1.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@300;400;700&display=swap" rel="stylesheet">
-    <title>REAL</title>
+    <title>Spotify Authorization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #tracks-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #tracks-list li {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Spotify Authorization</h1>
+    <div id="content"></div>
 
-    
-        <h1>REAL</h1>
-       
     <script>
-
-const clientId = '2f4438a4873044d195f984a43319e804';
-const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Must match the registered redirect URI
+        const clientId = '2f4438a4873044d195f984a43319e804'; // Replace with your Spotify client ID
+        const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Adjust to your redirect URI
         const scopes = 'user-read-private user-read-email';
-const authEndpoint = 'https://accounts.spotify.com/authorize';
+        const authEndpoint = 'https://accounts.spotify.com/authorize';
         const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-       
+
         function generateRandomString(length) {
             const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let result = '';
