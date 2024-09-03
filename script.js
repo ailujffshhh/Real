@@ -3,6 +3,7 @@
         const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Must match the registered redirect URI
         const scopes = 'user-read-private user-read-email';
 
+       
         function openSpotifyLogin(){
             const state = generateRandomString(16);
 
@@ -24,4 +25,6 @@
             }
             return result;
         }
+
+       
   
