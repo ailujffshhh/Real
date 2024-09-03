@@ -1,4 +1,7 @@
 function openSpotifyLogin() {
-    const spotifyLoginUrl = "https://accounts.spotify.com/authorize?client_id=2f4438a4873044d195f984a43319e804&response_type=code&redirect_uri=ailujffshhh.github.io/Real&scope=user-read-private user-read-email"
-    window.open(spotifyLoginUrl, '_blank');
+    const clientId = '2f4438a4873044d195f984a43319e804';
+    const redirectUri = 'https://ailujffshhh.github.io/Real'; 
+    const scopes = 'user-read-private user-read-email';
+    const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${encodeURIComponent(clientId)}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+    window.location.href = authUrl;
 }
