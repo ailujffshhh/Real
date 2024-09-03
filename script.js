@@ -3,7 +3,7 @@
         const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard'; // Must match the registered redirect URI
         const scopes = 'user-read-private user-read-email';
 
-        document.getElementById('login-btn').addEventListener('click', () => {
+        function openSpotifyLogin(){
             const state = generateRandomString(16);
 
             const authUrl = new URL('https://accounts.spotify.com/authorize');
@@ -14,7 +14,7 @@
             authUrl.searchParams.append('state', state);
 
             window.location.href = authUrl.toString();
-        });
+        };
 
         function generateRandomString(length) {
             const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
