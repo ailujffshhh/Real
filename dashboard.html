@@ -61,7 +61,7 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-const token = accessToken; // Replace with your actual token
+const token = urlParams.get('access_token'); // Replace with your actual token
 
 async function fetchWebApi(endpoint, method, body) {
     const res = await fetch(`https://api.spotify.com/${endpoint}`, {
