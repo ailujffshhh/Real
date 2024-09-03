@@ -18,49 +18,66 @@
 
 
 
-
-        const express = require('express');
-const querystring = require('querystring');
-const axios = require('axios'); // To make HTTP requests
-const app = express();
-const port = 8888;
-
-const clientId = '2f4438a4873044d195f984a43319e804'; // Replace with your Spotify client ID
-const clientSecret = '79b9df7213d343f4a06ef3d2800b12b2'; // Replace with your Spotify client secret
-const redirectUri = 'https://ailujffshhh.github.io/Real/dashboard';
-
-app.get('/callback', async (req, res) => {
-    const code = req.query.code;
-    const state = req.query.state;
-
-    if (code) {
-        try {
-            const tokenResponse = await axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirectUri
-            }), {
+function fetchAccessToken(code) {
+            return fetch(tokenEndpoint, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-                }
-            });
-
-            const accessToken = tokenResponse.data.access_token;
-            res.send(`Access Token: ${accessToken}`);
-        } catch (error) {
-            res.send('Error exchanging authorization code for access token.');
-            console.error('Error:', error);
+                    'Authorization': 'Basic ' + btoa(`${clientId}:`)
+                },
+                body: new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: redirectUri
+                })
+            }).then(response => response.json());
         }
-    } else {
-        res.send('No authorization code found.');
-    }
-});
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+        function fetchTopTracks(accessToken) {
+            return fetch('https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=5', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            }).then(response => response.json());
+        }
 
+        function displayTopTracks(topTracks) {
+            const tracksList = document.getElementById('tracks-list');
+            topTracks.items.forEach(track => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${track.name} by ${track.artists.map(artist => artist.name).join(', ')}`;
+                tracksList.appendChild(listItem);
+            });
+        }
+
+        function handleAuth() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                fetchAccessToken(code)
+                    .then(data => fetchTopTracks(data.access_token))
+                    .then(topTracks => {
+                        document.getElementById('content').innerHTML = `
+                            <h2>Top Tracks</h2>
+                            <ul id="tracks-list"></ul>
+                        `;
+                        displayTopTracks(topTracks);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('content').textContent = 'Error fetching top tracks.';
+                    });
+            } else {
+                document.getElementById('content').innerHTML = `
+                    <button id="login-btn">Login with Spotify</button>
+                `;
+
+                document.getElementById('login-btn').addEventListener('click', redirectToSpotifyLogin);
+            }
+        }
+
+        handleAuth();
 
     </script>
 </body>
