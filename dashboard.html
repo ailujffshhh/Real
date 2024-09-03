@@ -10,10 +10,18 @@
     <title>REAL</title>
 </head>
 <body>
-
+    <h1>Authorization Code</h1>
+    <p id="status"></p>
     
-        <h1>REAL</h1>
-       
-    <script src="script1.js"></script>
+    <script>
+        const queryParams = new URLSearchParams(window.location.search);
+        const code = queryParams.get('code');
+        
+        if (code) {
+            document.getElementById('status').textContent = `Authorization Code: ${code}`;
+        } else {
+            document.getElementById('status').textContent = 'No authorization code found.';
+        }
+    </script>
 </body>
 </html>
